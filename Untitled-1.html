@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CGPA & Attendance Calculator</title>
+  <style>
+    :root {
+      --primary: #7c4dff;
+      --primary-light: #b47cff;
+      --secondary: #3d5afe;
+      --dark: #000000;
+      --darker: #0a0a0a;
+      --text: #ffffff;
+      --text-muted: #b0bec5;
+      --success: #00c853;
+      --warning: #ffab00;
+      --danger: #ff1744;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--dark);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 0;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      border: 3px solid white;
+      box-shadow: 0 0 15px rgba(223, 112, 112, 0.3);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .tag {
+      display: inline-block;
+      background-color: rgba(255,255,255,0.15);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .options {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin: 40px 0;
+    }
+
+    .btn {
+      display: inline-block;
+      min-width: 200px;
+      padding: 15px 25px;
+      font-size: 16px;
+      font-weight: 500;
+      background: linear-gradient(to right, var(--primary), var(--primary-light));
+      color: var(--text);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 7px 15px rgba(0,0,0,0.3);
+    }
+
+    .card {
+      background: var(--darker);
+      padding: 30px;
+      border-radius: 15px;
+      margin: 20px auto;
+      max-width: 700px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      display: none;
+    }
+
+    .card h2 {
+      color: var(--primary-light);
+      font-size: 24px;
+      margin-top: 0;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 8px 0 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background-color: rgba(255,255,255,0.05);
+      color: var(--text);
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    input:focus, select:focus {
+      box-shadow: 0 0 0 2px var(--primary-light);
+      outline: none;
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .calculate {
+      width: 100%;
+      margin-top: 25px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .calculate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .success { 
+      background-color: rgba(0, 200, 83, 0.15); 
+      border-left: 4px solid var(--success);
+    }
+    
+    .warning { 
+      background-color: rgba(255, 171, 0, 0.15); 
+      border-left: 4px solid var(--warning);
+    }
+    
+    .danger { 
+      background-color: rgba(255, 23, 68, 0.15); 
+      border-left: 4px solid var(--danger);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px 0;
+      margin-top: 60px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .footer a {
+      color: var(--primary-light);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer a:hover {
+      color: var(--text);
+    }
+
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .socials a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .socials a:hover {
+      transform: translateY(-5px);
+      background-color: var(--primary);
+    }
+
+    .socials a img {
+  width: 20px;
+  height: 20px;
+  filter: none; /* Show full color */
+}
+
+
+    .about-me {
+      max-width: 700px;
+      margin: 40px auto;
+      background: var(--darker);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      display: none;
+    }
+
+    .about-me h2 {
+      color: var(--primary-light);
+      margin-top: 0;
+    }
+
+    .about-me p {
+      margin: 15px 0;
+      font-size: 16px;
+    }
+
+    .about-me span {
+      font-weight: 600;
+      color: var(--primary-light);
+    }
+    
+    .animated {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Premium badge removed as requested */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="Logo.png" alt="Logo" class="logo">
+      <!-- Educational calculator logo -->
+      <h1>Premium CGPA & Attendance Calculator</h1>
+      <div class="tag">Saveetha School of Engineering</div>
+    </header>
+
+    <div class="options">
+      <button class="btn" onclick="showSection('attendanceCard')">Attendance Calculator</button>
+      <button class="btn" onclick="showSection('cgpaCard')">CGPA Calculator</button>
+      <button class="btn" onclick="showSection('aboutMeCard')">About This Tool</button>
+    </div>
+
+    <div id="attendanceCard" class="card animated">
+      <h2>Attendance Calculator</h2>
+      <label>Desired Attendance Percentage</label>
+      <select id="desired">
+        <option value="65">65%</option>
+        <option value="70">70%</option>
+        <option value="75">75%</option>
+        <option value="80">80%</option>
+        <option value="85">85%</option>
+        <option value="90">90%</option>
+        <option value="95">95%</option>
+        <option value="100">100%</option>
+      </select>
+
+      <label>Total Classes:</label>
+      <input type="number" id="totalClasses" placeholder="Enter total number of classes">
+
+      <label>Attended Classes:</label>
+      <input type="number" id="attendedClasses" placeholder="Enter number of classes attended">
+
+      <button class="calculate" onclick="calculateAttendance()">Calculate</button>
+      <div id="attendanceResult" class="result"></div>
+    </div>
+    
+
+    <div id="cgpaCard" class="card animated">
+      <h2>CGPA Calculator</h2>
+      <div class="grid">
+        <div>
+          <label>S Grade:</label>
+          <input type="number" id="gradeS" value="0" min="0">
+        </div>
+        <div>
+          <label>A Grade:</label>
+          <input type="number" id="gradeA" value="0" min="0">
+        </div>
+        <div>
+          <label>B Grade:</label>
+          <input type="number" id="gradeB" value="0" min="0">
+        </div>
+        <div>
+          <label>C Grade:</label>
+          <input type="number" id="gradeC" value="0" min="0">
+        </div>
+        <div>
+          <label>D Grade:</label>
+          <input type="number" id="gradeD" value="0" min="0">
+        </div>
+        <div>
+          <label>E Grade:</label>
+          <input type="number" id="gradeE" value="0" min="0">
+        </div>
+      </div>
+      <button class="calculate" onclick="calculateCGPA()">Calculate</button>
+      <div id="cgpaResult" class="result"></div>
+    </div>
+
+    <div id="aboutMeCard" class="about-me animated">
+      <h2>About This Tool</h2>
+      <p>This premium calculator was designed to help students easily track their attendance requirements and calculate their CGPA with a clean, modern interface.</p>
+      <p>The tool provides accurate calculations for:</p>
+      <p>• Determining how many additional classes you need to attend to reach your desired attendance percentage</p>
+      <p>• Converting your grades to CGPA and percentage</p>
+      <p>• Helping you stay on track with your academic goals</p>
+    </div>
+
+    <div class="footer">
+      <div class="socials">
+        <a href="https://www.instagram.com/___tanush.kumar___/" target="_blank"><img src="2111463.png" alt="Instagram"></a>
+        <a href="https://www.facebook.com/tanushkumar.simhadri" target="_blank"><img src="733547.png" alt="Facebook"></a>
+        <a href="https://www.linkedin.com/in/tanush-kumar-simhadri-821501227/" target="_blank"><img src="145807.png" alt="LinkedIn"></a>
+        <a href="https://github.com/Tanushkumar24" target="_blank"><img src="25231.png" alt="GitHub"></a>
+      </div>
+      <p>Designed by <a href="javascript:void(0)" onclick="showCreator()">Simhadri Tanush Kumar</a></p>
+    </div>
+  </div>
+
+  <div id="creatorInfoCard" class="about-me animated" style="display:none;">
+    <h2>About the Creator</h2>
+    <div style="text-align: center; margin-bottom: 25px;">
+      <img src="meh.jpg" alt="Simhadri Tanush Kumar" style="max-width: 300px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+    </div>
+    <p><span>Name:</span> Simhadri Tanush Kumar</p>
+    <p><span>Department:</span> Electronics and Communication Engineering (ECE)</p>
+    <p><span>College:</span> Saveetha School of Engineering</p>
+    <p><span>Hometown:</span> Vijayawada, Andhra Pradesh</p>
+    <p><span>Purpose:</span> I created this tool to help fellow students easily calculate their attendance and CGPA.</p>
+    <button class="btn" style="margin-top: 20px;" onclick="hideCreator()">Go Back</button>
+  </div>
+
+  <script>
+    function showSection(id) {
+      const sections = ["attendanceCard", "cgpaCard", "aboutMeCard"];
+      sections.forEach(sec => {
+        document.getElementById(sec).style.display = (sec === id) ? "block" : "none";
+      });
+      // Hide creator info if showing other sections
+      document.getElementById("creatorInfoCard").style.display = "none";
+    }
+
+    function showCreator() {
+      // Hide all other sections
+      const sections = ["attendanceCard", "cgpaCard", "aboutMeCard"];
+      sections.forEach(sec => {
+        document.getElementById(sec).style.display = "none";
+      });
+      // Show creator info
+      document.getElementById("creatorInfoCard").style.display = "block";
+      
+      // Scroll to creator info
+      document.getElementById("creatorInfoCard").scrollIntoView({behavior: "smooth"});
+    }
+    
+    function hideCreator() {
+      document.getElementById("creatorInfoCard").style.display = "none";
+      showSection("aboutMeCard"); // Show about section when going back
+    }
+
+    function calculateAttendance() {
+      const total = parseFloat(document.getElementById("totalClasses").value);
+      const attended = parseFloat(document.getElementById("attendedClasses").value);
+      const desired = parseFloat(document.getElementById("desired").value);
+      const resultDiv = document.getElementById("attendanceResult");
+
+      if (isNaN(total) || isNaN(attended) || total <= 0 || attended < 0 || attended > total) {
+        resultDiv.className = 'result danger';
+        resultDiv.innerHTML = "Please enter valid values.";
+        return;
+      }
+
+      const current = (attended / total) * 100;
+      let message = `Your current attendance is <strong>${current.toFixed(2)}%</strong><br>`;
+
+      if (current >= desired) {
+        message += "🎉 You already meet the desired percentage!";
+        resultDiv.className = 'result success';
+      } else {
+        const needed = Math.ceil((desired * total - 100 * attended) / (100 - desired));
+        message += `📌 You need to attend <strong>${needed}</strong> more class(es) in a row to reach ${desired}%`;
+        resultDiv.className = 'result warning';
+      }
+
+      resultDiv.innerHTML = message;
+    }
+
+    function calculateCGPA() {
+      const weights = { S: 10, A: 9, B: 8, C: 7, D: 6, E: 5 };
+      const grades = ['S', 'A', 'B', 'C', 'D', 'E'];
+      let totalPoints = 0;
+      let totalSubjects = 0;
+
+      grades.forEach(grade => {
+        const count = parseInt(document.getElementById(`grade${grade}`).value) || 0;
+        totalPoints += count * weights[grade];
+        totalSubjects += count;
+      });
+
+      const resultDiv = document.getElementById("cgpaResult");
+
+      if (totalSubjects === 0) {
+        resultDiv.className = 'result danger';
+        resultDiv.innerHTML = "Please enter at least one grade.";
+        return;
+      }
+
+      const cgpa = totalPoints / totalSubjects;
+      const percentage = (cgpa - 0.75) * 10;
+
+      resultDiv.className = 'result success';
+      resultDiv.innerHTML = `📚 Your CGPA is <strong>${cgpa.toFixed(2)}</strong><br>
+                             🎯 Equivalent Percentage: <strong>${percentage.toFixed(2)}%</strong>`;
+    }
+  </script>
+</body>
+</html>
