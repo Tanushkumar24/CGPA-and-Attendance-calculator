@@ -270,6 +270,40 @@
   </style>
 </head>
 <body>
+  <div id="welcome">
+    <img src="wp7041480-brahmanandam-wallpapers.jpg" alt="Welcome GIF">
+  </div>
+  
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('welcome').style.display = 'none';
+      }, 1500); // Show for 1.5 seconds and then hide
+    });
+  </script>
+  
+  <style>
+    #welcome {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+  
+    #welcome img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* makes sure the gif fills the screen without distortion */
+    }
+  </style>
+  
+  
   <div class="container">
     <header>
       <img src="Logo.png" alt="Logo" class="logo">
